@@ -1,0 +1,349 @@
+[
+    {
+        "id": "29c8e326663fadc2",
+        "type": "tab",
+        "label": "fbTakFlow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b24d253a1cceacdc",
+        "type": "websocket out",
+        "z": "29c8e326663fadc2",
+        "name": "fb",
+        "server": "",
+        "client": "54da0c8a1ce47c75",
+        "x": 470,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "10f1c9ada9e09c05",
+        "type": "function",
+        "z": "29c8e326663fadc2",
+        "name": "oem parameters",
+        "func": "msg.payload = {\n    \"cmd\": \"get\",\n    \"ps\": [\"gps_lat\", \"gps_long\", \"gps_alt_ft\", \"gps_heading\", \"gps_state\", \"name\", \"unit_name\", \"trig_shake_status\", \"unique_id\", \"gps_hdop\", \"gps_mph\"]\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "b24d253a1cceacdc"
+            ]
+        ]
+    },
+    {
+        "id": "37e02b317618c039",
+        "type": "inject",
+        "z": "29c8e326663fadc2",
+        "name": "ping",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "10f1c9ada9e09c05"
+            ]
+        ]
+    },
+    {
+        "id": "9296fe879b2ade9a",
+        "type": "debug",
+        "z": "29c8e326663fadc2",
+        "name": "debug ws-in",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "823edbfc2f5afe88",
+        "type": "websocket in",
+        "z": "29c8e326663fadc2",
+        "name": "fb",
+        "server": "",
+        "client": "54da0c8a1ce47c75",
+        "x": 630,
+        "y": 160,
+        "wires": [
+            [
+                "9296fe879b2ade9a",
+                "f3119673c9c30a09"
+            ]
+        ]
+    },
+    {
+        "id": "da4c437523c1e02c",
+        "type": "tak",
+        "z": "29c8e326663fadc2",
+        "name": "TAK",
+        "x": 1330,
+        "y": 200,
+        "wires": [
+            [
+                "031477b238d843ca",
+                "ff9d67e9bda632e3"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "eeec408731a8b5e1",
+        "type": "function",
+        "z": "29c8e326663fadc2",
+        "name": "example/test json",
+        "func": "/* \nExample JSON containing the keys & values for popular cursor on target CoT \nfields, including time, point latitude & longitude, type, and more.\n*/\n\n/* Stale is Date.now() + miliseconds. \n Ruberic: 1000 Miliseconds in 1 Second\n Example: 5 Minutes, in Miliseconds, is 300000\n   (5 x 60 * 1000 )\n*/\nconst cinco = 5 * 60 * 1000;\nconst diez = 2 * cinco;\nconst stale = new Date(Date.now() + diez).toISOString();\n\n/*\nNot all fields are required for display on most TAK Products, other systems may \nhave different requirements. YMMV.\n*/\n\nmsg.payload = {\n    \"event\": {\n        \"_attributes\": {\n            \"version\": \"2.0\",\n            \"uid\": \"TACO MONSTER\",\n            \"type\": \"a-f-G-U-S-T-A-C\",\n            \"how\": \"m-p\",\n            \"time\": new Date(Date.now()).toISOString(),\n            \"start\": new Date(Date.now()).toISOString(),\n            \"stale\": stale\n        },\n        \"point\": {\n            \"_attributes\": {\n                \"lat\": \"12.76\",\n                \"lon\": \"21.4975\",\n                \"hae\": \"0.0\",\n                \"ce\": \"9999999.0\",\n                \"le\": \"9999999.0\"\n            }\n        },\n        \"detail\": {}\n        }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 280,
+        "wires": [
+            [
+                "da4c437523c1e02c"
+            ]
+        ]
+    },
+    {
+        "id": "031477b238d843ca",
+        "type": "debug",
+        "z": "29c8e326663fadc2",
+        "name": "debug xml",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1530,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "8d28c25d8a9be3a6",
+        "type": "udp out",
+        "z": "29c8e326663fadc2",
+        "name": "",
+        "addr": "239.2.3.1",
+        "iface": "",
+        "port": "6969",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "multi",
+        "x": 1550,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "bbe026f3bd843314",
+        "type": "function",
+        "z": "29c8e326663fadc2",
+        "name": "fb json (spots)",
+        "func": "/* \nExample JSON containing the keys & values for popular cursor on target CoT \nfields, including time, point latitude & longitude, type, and more.\n*/\n\n/* Stale is Date.now() + miliseconds. \n Ruberic: 1000 Miliseconds in 1 Second\n Example: 5 Minutes, in Miliseconds, is 300000\n   (5 x 60 * 1000 )\n*/\nconst short = 10000;\nconst cinco = 5 * 60 * 1000;\nconst diez = 2 * cinco;\nconst stale = new Date(Date.now() + short).toISOString();\n\nvar course = parseInt(msg.payload.pvs[3].v);\nvar speed = msg.payload.pvs[10].v\nif (speed > 0 || speed < 0) {\n    speed = parseInt(speed);\n} else {\n    speed = 0;\n}\nvar state = msg.payload.pvs[4].v\nvar shake = msg.payload.pvs[7].v\nvar status;\n\n\nif (state === \"locked\" && speed >= 50) {\n    status = \"-16711936\"; //green\n}\nelse if (state === \"locked\" && speed >= 25 && speed < 50) {\n    status = \"-256\"; //yellow\n}\nelse if ((state === \"locked\" && speed < 25) || shake === \"active\") {\n    status = \"-65536\"; //red\n} else {\n    status = \"-8947849\"; //grey\n};\n\n//var purple = \"-65281\" //purple\n//var grey = \"-8947849\" //grey\n//var red = \"-65536\" //red\n//var yellow = \"-256\" //yellow\n//var green = \"-16711936\" //green\n\nvar color = status;\nvar unit = msg.payload.pvs[6].v\nvar name = msg.payload.pvs[5].v;\nvar lat = msg.payload.pvs[0].v;\nvar lon = msg.payload.pvs[1].v;\nvar state = msg.payload.pvs[4].v;\n//var alt = msg.payload.pvs[2].v;\n\n/*\nNot all fields are required for display on most TAK Products, other systems may \nhave different requirements. YMMV.\n*/\n\nmsg.payload = {\n    \"event\": {\n        \"_attributes\": {\n            \"version\": \"2.0\",\n            \"uid\": \"\"+ name +\"\",\n            \"type\": \"b-m-p-s-m\",\n            \"how\": \"m-g\",\n            \"time\": new Date(Date.now()).toISOString(),\n            \"start\": new Date(Date.now()).toISOString(),\n            \"stale\": stale,\n        },\n        \"point\": {\n            \"_attributes\": {\n                \"lat\": \"\"+ lat +\"\",\n                \"lon\": \"\"+ lon + \"\",\n                \"hae\": \"0.0\",\n                \"ce\": \"9999999.0\",\n                \"le\": \"9999999.0\"\n            }\n        },\n        \"detail\": {\n            \"usericon\": {\n                \"_attributes\": {\n                    \"iconsetpath\": \"COT_MAPPING_SPOTMAP/b-m-p-s-m/\"+ color +\"\",\n                },\n            },\n            \"contact\": {\n                \"_attributes\": {\n                \"callsign\": \"\"+ name +\"\",\n                }\n            },\n            /* \"__group\": {\n                \"_attributes\": {\n                \"role\": \"Team Member\",\n                \"name\": \"Red\",\n                }\n            }, */\n            \"color\": {\n                \"_attributes\": {\n                \"argb\": \"\"+ color +\"\",\n                \"test\": \"test\",\n                },\n            },\n        }\n    }\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ff9d67e9bda632e3",
+        "type": "tcp out",
+        "z": "29c8e326663fadc2",
+        "name": "",
+        "host": "10.237.104.20",
+        "port": "8089",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "1c52b35895c06e7e",
+        "x": 1570,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "f1a0f394bbfedea5",
+        "type": "debug",
+        "z": "29c8e326663fadc2",
+        "name": "debug json",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1310,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "f3119673c9c30a09",
+        "type": "json",
+        "z": "29c8e326663fadc2",
+        "name": "organize",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 820,
+        "y": 240,
+        "wires": [
+            [
+                "41a01c97cd190738",
+                "be061b1247ebfe1f"
+            ]
+        ]
+    },
+    {
+        "id": "41a01c97cd190738",
+        "type": "debug",
+        "z": "29c8e326663fadc2",
+        "name": "debug organize",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "be061b1247ebfe1f",
+        "type": "function",
+        "z": "29c8e326663fadc2",
+        "name": "fb json (pointers)",
+        "func": "/* \nExample JSON containing the keys & values for popular cursor on target CoT \nfields, including time, point latitude & longitude, type, and more.\n*/\n\n/* Stale is Date.now() + miliseconds. \n Ruberic: 1000 Miliseconds in 1 Second\n Example: 5 Minutes, in Miliseconds, is 300000\n   (5 x 60 * 1000 )\n*/\n\nconst short = 10000;\nconst cinco = 5 * 60 * 1000;\nconst diez = 2 * cinco;\nconst stale = new Date(Date.now() + short).toISOString();\n\nvar dirNone = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/track-none.png\"\nvar dir0 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/000.png\"\nvar dir30 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/030.png\"\nvar dir60 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/060.png\"\nvar dir90 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/090.png\"\nvar dir120 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/120.png\"\nvar dir150 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/150.png\"\nvar dir180 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/180.png\"\nvar dir210 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/210.png\"\nvar dir240 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/240.png\"\nvar dir270 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/270.png\"\nvar dir300 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/300.png\"\nvar dir330 = \"ad78aafb-83a6-4c07-b2b9-a897a8b6a38f/Pointers/330.png\"\nvar course = parseInt(msg.payload.pvs[3].v);\nvar speed = msg.payload.pvs[10].v\nif (speed > 0 || speed < 0) {\n    speed = parseInt(speed);\n} else {\n    speed = 0;\n}\nvar state = msg.payload.pvs[4].v\nvar shake = msg.payload.pvs[7].v\nvar dir;\nvar status;\n\n//icon direction below\nif (course >= 346 || course <= 15) {\n    dir = dir0;\n}\nelse if (course >= 16 && course <= 45) {\n    dir = dir30;\n}\nelse if (course >= 46 && course <= 75) {\n    dir = dir60;\n}\nelse if (course >= 76 && course <= 105) {\n    dir = dir90;\n}\nelse if (course >= 106 && course <= 135) {\n    dir = dir120;\n}\nelse if (course >= 136 && course <= 165) {\n    dir = dir150;\n}\nelse if (course >= 166 && course <= 195) {\n    dir = dir180;\n}\nelse if (course >= 196 && course <= 225) {\n    dir = dir210;\n}\nelse if (course >= 226 && course <= 255) {\n    dir = dir240;\n}\nelse if (course >= 256 && course <= 285) {\n    dir = dir270;\n}\nelse if (course >= 286 && course <= 315) {\n    dir = dir300;\n}\nelse if (course >= 316 && course <= 345) {\n    dir = dir330;\n} else {\n    dir = dirNone;\n};\n\n\nif (state === \"locked\" && speed >= 50) {\n    status = \"-16711936\"; //green\n}\nelse if (state === \"locked\" && speed >= 25 && speed < 50) {\n    status = \"-256\"; //yellow\n}\nelse if ((state === \"locked\" && speed < 25) || shake === \"active\") {\n    status = \"-65536\"; //red\n}\nelse if (state !== \"locked\") {\n    status = \"-8947849\"; //grey\n    dir = dirNone;\n} else {\n    status = \"-8947849\"; //grey\n    dir = dirNone;\n};\n\n//var purple = \"-65281\" //purple\n//var grey = \"-8947849\" //grey\n//var red = \"-65536\" //red\n//var yellow = \"-256\" //yellow\n//var green = \"-16711936\" //green\n\nvar icon = dir;\nvar color = status;\nvar unit = msg.payload.pvs[6].v\nvar name = msg.payload.pvs[5].v;\nvar lat = msg.payload.pvs[0].v;\nvar lon = msg.payload.pvs[1].v;\n//var alt = msg.payload.pvs[2].v;\n\n/*\nNot all fields are required for display on most TAK Products, other systems may \nhave different requirements. YMMV.\n*/\n\nmsg.payload = {\n    \"event\": {\n        \"_attributes\": {\n            \"version\": \"2.0\",\n            \"uid\": \"\" + name + \"\",\n            \"type\": \"b-m-p-s-p-loc\",\n            \"how\": \"m-g\",\n            \"time\": new Date(Date.now()).toISOString(),\n            \"start\": new Date(Date.now()).toISOString(),\n            \"stale\": stale,\n        },\n        \"point\": {\n            \"_attributes\": {\n                \"lat\": \"\" + lat + \"\",\n                \"lon\": \"\" + lon + \"\",\n                \"hae\": \"0.0\",\n                \"ce\": \"9999999.0\",\n                \"le\": \"9999999.0\"\n            }\n        },\n        \"detail\": {\n            \"status\": {\n                \"_attributes\": {\n                    \"readiness\": \"true\"\n                }\n            },\n            \"archive\": {\n                \"__video\": {\n                    \"_attributes\": {\n                        \"uid\": \"\" + name + \"\",\n                        \"url\": \"\",\n                    }\n                },\n                \"ConnectionEntry\": {\n                    \"_attributes\": {\n                        \"networkTimeout\": \"12000\",\n                        \"uid\": \"\" + name + \"\",\n                        \"path\": \"\",\n                        \"protocol\": \"raw\",\n                        \"bufferTime\": \"-1\",\n                        \"address\": \"\", //url\n                        \"port\": \"-1\",\n                        \"roverPort\": \"-1\",\n                        \"rtspReliable\": \"0\",\n                        \"ignoreEmbeddedKLV\": \"false\",\n                        \"alias\": \"\" + name + \"\",\n                    }\n                }\n            },\n            \"usericon\": {\n                \"_attributes\": {\n                    \"iconsetpath\": \"\" + icon + \"\",\n                },\n            },\n            \"contact\": {\n                \"_attributes\": {\n                    \"callsign\": \"\" + name + \"\",\n                }\n            },\n            \"color\": {\n                \"_attributes\": {\n                    \"argb\": \"\"+ color +\"\",\n                    \"test\": \"test\",\n                },\n            },    \n        },\n    },\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 240,
+        "wires": [
+            [
+                "f1a0f394bbfedea5",
+                "da4c437523c1e02c"
+            ]
+        ]
+    },
+    {
+        "id": "69b4d9adec774d83",
+        "type": "comment",
+        "z": "29c8e326663fadc2",
+        "name": "fbTakFlow",
+        "info": "a node red flow to forward fb device to ATAK via TAKServer or Multicast (requires ampledata's node-red-contrib-tak node to be installed)\nto add more flashback devices to report to atak add a websocket out and websocket in node and add in their websocket url and appropriate parameters.",
+        "x": 200,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "955e235ef60e1030",
+        "type": "inject",
+        "z": "29c8e326663fadc2",
+        "name": "test / troubleshoot",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 790,
+        "y": 360,
+        "wires": [
+            [
+                "eeec408731a8b5e1"
+            ]
+        ]
+    },
+    {
+        "id": "54da0c8a1ce47c75",
+        "type": "websocket-client",
+        "path": "wss://192.168.1.100:8091/fb4-1234/ws/?access=exampleexampleexampleexampleexampleexampleexample123412341234",
+        "tls": "93c735c7a4253d81",
+        "wholemsg": "false",
+        "hb": "30",
+        "subprotocol": "control"
+    },
+    {
+        "id": "1c52b35895c06e7e",
+        "type": "tls-config",
+        "name": "node-red to takserver",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "node-red.pem",
+        "keyname": "node-red.key",
+        "caname": "ca.pem",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "93c735c7a4253d81",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
